@@ -19,29 +19,24 @@ namespace GradeBook.GradeBooks
                 throw new InvalidOperationException();
             }
 
-            var gradeRank = 0;
-            foreach (var student in Students.OrderBy(s => s.AverageGrade))
-            {
-                if (averageGrade > student.AverageGrade)
-                {
-                    gradeRank++;
-                }
-            }
+            var threshold = (int)Math.Ceiling(Students.Count * 0.2);
+            var lstGrades = Students.OrderByDescending(s => s.AverageGrade)
+                .Select(s => s.AverageGrade)
+                .ToList();
 
-            var gradeRankPercentage = (double)gradeRank / Students.Count;
-            if (gradeRankPercentage >= 0.8)
+            if (lstGrades[threshold - 1] <= averageGrade)
             {
                 return 'A';
             }
-            else if (gradeRankPercentage >= 0.6 && gradeRankPercentage < 0.8)
+            else if (lstGrades[(threshold * 2) - 1] <= averageGrade)
             {
                 return 'B';
             }
-            else if (gradeRankPercentage >= 0.4 && gradeRankPercentage < 0.6)
+            else if (lstGrades[(threshold * 3) - 1] <= averageGrade)
             {
                 return 'C';
             }
-            else if (gradeRankPercentage >= 0.2 && gradeRankPercentage < 0.4)
+            else if (lstGrades[(threshold * 4) - 1] <= averageGrade)
             {
                 return 'D';
             }
